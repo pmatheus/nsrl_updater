@@ -26,7 +26,7 @@ Siga estas instruções para obter uma cópia local do projeto em funcionamento.
 
 1.  Clone o repositório:
     ```sh
-    git clone [URL_DO_SEU_REPOSITORIO_AQUI]
+    git clone https://github.com/pmatheus/nsrl_updater.git
     cd nsrl_updater
     ```
 2.  Compile o projeto:
@@ -48,7 +48,73 @@ Siga estas instruções para obter uma cópia local do projeto em funcionamento.
 
 ## Como Usar
 
-[ADICIONE AQUI EXEMPLOS DE COMO USAR A FERRAMENTA, QUAIS COMANDOS E OPÇÕES ESTÃO DISPONÍVEIS]
+Para executar o `nsrl_updater`, você precisará fornecer o caminho para o arquivo de banco de dados SQLite e pelo menos um arquivo SQL para importação. Argumentos opcionais podem ser usados para ajustar o desempenho.
+
+**Sintaxe básica:**
+
+```sh
+# Para Windows (no diretório do projeto, após compilar com 'cargo build')
+.\target\debug\nsrl_updater.exe <caminho_para_seu_banco.db> <caminho_para_arquivo.sql> [opções]
+
+# Ou, se compilado em modo release:
+.\target\release\nsrl_updater.exe <caminho_para_seu_banco.db> <caminho_para_arquivo.sql> [opções]
+
+# Para Linux/macOS (no diretório do projeto, após compilar com 'cargo build')
+./target/debug/nsrl_updater <caminho_para_seu_banco.db> <caminho_para_arquivo.sql> [opções]
+
+# Ou, se compilado em modo release:
+./target/release/nsrl_updater <caminho_para_seu_banco.db> <caminho_para_arquivo.sql> [opções]
+```
+
+**Argumentos Obrigatórios:**
+
+*   `<caminho_para_seu_banco.db>`: O caminho completo para o arquivo de banco de dados SQLite que será usado ou criado.
+*   `<caminho_para_arquivo.sql>`: O caminho completo para o arquivo SQL contendo as instruções a serem importadas. Você pode especificar múltiplos arquivos SQL separando-os por espaços.
+
+**Exemplo com um arquivo SQL:**
+
+```sh
+.\target\release\nsrl_updater.exe C:\data\nsrl.db C:\data\NSRLFile.txt
+```
+
+**Exemplo com múltiplos arquivos SQL:**
+
+```sh
+.\target\release\nsrl_updater.exe C:\data\nsrl.db C:\data\NSRLFile_part1.txt C:\data\NSRLFile_part2.txt
+```
+
+**Opções (Argumentos Opcionais):**
+
+*   `--batch-size=N`
+    *   Define o número de instruções SQL por transação (lote).
+    *   *Padrão*: `25000`
+    *   Exemplo: `--batch-size=50000`
+
+*   `--buffer-size=N`
+    *   Define o tamanho do buffer de leitura para arquivos SQL, em Megabytes (MB).
+    *   *Padrão*: `32` MB
+    *   Exemplo: `--buffer-size=64`
+
+*   `--threads=N`
+    *   Define o número de threads para processamento paralelo.
+    *   *Padrão*: Número de CPUs do sistema.
+    *   Exemplo: `--threads=4`
+
+*   `--queue-capacity=N`
+    *   Define a capacidade máxima da fila de instruções SQL aguardando processamento.
+    *   *Padrão*: `100000`
+    *   Exemplo: `--queue-capacity=200000`
+
+*   `--no-mmap`
+    *   Desabilita o uso de mapeamento de memória (mmap) para a leitura dos arquivos SQL. Por padrão, o mmap é utilizado se disponível e benéfico.
+
+**Exemplo com opções:**
+
+```sh
+.\target\release\nsrl_updater.exe C:\data\nsrl.db C:\data\NSRLFile.txt --threads=8 --batch-size=100000 --buffer-size=128
+```
+
+Lembre-se de ajustar os caminhos e opções conforme necessário para o seu ambiente e arquivos.
 
 ## Contribuição
 
